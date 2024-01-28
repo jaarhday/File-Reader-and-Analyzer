@@ -21,7 +21,10 @@
 using namespace std;
 
 /**********************************************************************************
- * Function to convert a string to lowercase
+ * Function to convert a string to lowercase, uses 'const string& str' in order 
+ * to make sure the original string passed won't be modified, and stops the program
+ * from copying potentially large objects that would take up too much space and
+ * cause the program to run slower 
  * ********************************************************************************/
 string toLowercase(const string& str) {
     string result = str;
