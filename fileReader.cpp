@@ -1,3 +1,13 @@
+/**********************************************************************************/
+/* Name: Alec Day
+*  Teacher: Brother Godderidge
+*  Date: January 27th, 2024
+*
+*  Description: This code is used to Read and Analyze files and generate some basic
+*  statistics on what is inside of the file such as; General Word Count, word specific 
+*  count (how man times the word showed up), and a statistical summary including
+*  average word variation, standard deviation count, and average word size
+/************************************************************************************/
 #include <iostream>
 #include <fstream>
 #include <map>
@@ -10,32 +20,40 @@
 
 using namespace std;
 
-// Function to convert a string to lowercase
+/**********************************************************************************
+ * Function to convert a string to lowercase
+ * ********************************************************************************/
 string toLowercase(const string& str) {
     string result = str;
     transform(result.begin(), result.end(), result.begin(), ::tolower);
     return result;
 }
 
-// Function to display the top N most used words
+/**********************************************************************************
+ * Function to display the top N most used words. Creates a vector of pairs to 
+ * sort by word occurrences. Sorts the vector based on word occurrences in 
+ * descending order, and displays the top N words
+ * ********************************************************************************/
 void displayTopWords(const map<string, int>& wordCount, int topN) {
-    // Create a vector of pairs to sort by word occurrences
     vector<pair<string, int>> sortedWords(wordCount.begin(), wordCount.end());
 
-    // Sort the vector based on word occurrences in descending order
     sort(sortedWords.begin(), sortedWords.end(),
          [](const auto& a, const auto& b) {
              return a.second > b.second;
          });
 
-    // Display the top N words
     cout << "\nTop " << topN << " Most Used Words:\n";
     for (size_t i = 0; i < min(sortedWords.size(), static_cast<size_t>(topN)); ++i) {
         cout << sortedWords[i].first << ": " << sortedWords[i].second << endl;
     }
 }
 
-// Function to calculate average word size
+/************************************************************************************
+ * Function to calculate average word size. calculateAverageWordSize computes 
+ * the average word size (in characters) based on the length of each word and 
+ * its frequency in the wordCount map. It returns a double representing the 
+ * average word size
+ * *********************************************************************************/
 double calculateAverageWordSize(const map<string, int>& wordCount) {
     double totalSize = 0.0;
     double totalWords = 0.0;
@@ -48,12 +66,13 @@ double calculateAverageWordSize(const map<string, int>& wordCount) {
     return (totalWords > 0) ? (totalSize / totalWords) : 0.0;
 }
 
-// Function to display statistical summary
+/************************************************************************************
+ * Function to display statistical summary. 
+ * *********************************************************************************/
 void displaySummary(const map<string, int>& wordCount) {
     cout << "\n===== Summary =====\n";
     cout << "Total Word Count: " << wordCount.size() << endl;
 
-    // Additional statistical analysis
     if (!wordCount.empty()) {
         // Calculate average word frequency
         double averageFrequency = 0.0;
@@ -86,42 +105,39 @@ void displaySummary(const map<string, int>& wordCount) {
         cout << "\nWord Frequency Variability (standard deviation) measures how much word frequencies deviate from the average.\n"
              << "A lower variability indicates that the words tend to be close to the mean (less variability in vocabulary),\n"
              << "while a higher variability indicates a wider range of frequency values (more variability in vocabulary).\n";
-
-        // Add any other relevant statistics here
     } else {
         cout << "No words found in the file.\n";
     }
 }
 
+/****************************************************************************************
+ * Main Function; Opens and reads the user-specified text file, checks if the file is 
+ * open, uses a Map to store word occurrences, reads words from the file, closes the file,
+ * and displays a UI to the user. The user can chose from a list of options which is 
+ * stored inside a switch statement. The options call each of the functions above
+*****************************************************************************************///     
 int main() {
-    // Prompt the user for the file name
     cout << "Enter the name of the text file: ";
     string fileName;
     cin >> fileName;
 
-    // Open and read the user-specified text file
     ifstream inputFile(fileName);
 
-    // Check if the file is open
     if (!inputFile.is_open()) {
         cout << "Error opening the file!" << endl;
         return 1;
     }
 
-    // Map to store word occurrences
     map<string, int> wordCount;
 
-    // Read words from the file
     string word;
     while (inputFile >> word) {
         // Convert word to lowercase and increment word count in the map
         wordCount[toLowercase(word)]++;
     }
 
-    // Close the file
     inputFile.close();
 
-    // Display UI
     int choice;
     do {
         cout << "\n===== Menu =====\n";
